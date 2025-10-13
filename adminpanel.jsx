@@ -1,116 +1,102 @@
-import React, { useState } from "react";
-import { useProducts } from "./ProductContext";
-import { useAuth } from "./AuthContext";
+import React, { useState, useEffect } from "react";
 
 export default function AdminPanel({ onClose }) {
-  const { products, addProduct, deleteProduct, updateProduct } = useProducts();
-  const { user } = useAuth();
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [img, setImg] = useState("");
+  const [products, setProducts] = useState([]);
 
-  // Only allow admin (you can change this email or set a special password check)
-  if (!user || user.email !== "admin@shophub.com") {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded shadow w-80 text-center">
-          <h2 className="text-lg font-bold mb-2">Access Denied</h2>
-          <p>You must be logged in as admin@shophub.com</p>
-          <button onClick={onClose} className="mt-3 underline">Close</button>
-        </div>
-      </div>
-    );
-  }
+  // Load existing products
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("products")) || [];
+    setProducts(saved);
+  }, []);
 
-  const [form, setForm] = useState({ name: "", price: "", img: "", category: "" });
-  const [editId, setEditId] = useState(null);
-
-  const handleImage = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm({ ...form, img: reader.result });
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleSubmit = (e) => {
+  const addProduct = (e) => {
     e.preventDefault();
-    if (editId) {
-      updateProduct({ ...form, id: editId });
-      setEditId(null);
-    } else {
-      addProduct({ ...form, price: Number(form.price) });
-    }
-    setForm({ name: "", price: "", img: "", category: "" });
+    if (!name || !price || !img) return alert("Please fill all fields");
+
+    const newProduct = {
+      id: Date.now(),
+      name,
+      price: parseFloat(price),
+      img,
+    };
+
+    const updated = [...products, newProduct];
+    setProducts(updated);
+    localStorage.setItem("products", JSON.stringify(updated));
+
+    setName("");
+    setPrice("");
+    setImg("");
   };
 
-  const handleEdit = (product) => {
-    setForm(product);
-    setEditId(product.id);
+  const deleteProduct = (id) => {
+    const updated = products.filter((p) => p.id !== id);
+    setProducts(updated);
+    localStorage.setItem("products", JSON.stringify(updated));
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 overflow-y-auto">
-      <div className="bg-white p-6 rounded shadow w-11/12 md:w-2/3 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4 text-center">🧰 Admin Panel</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg p-6 w-96 shadow-lg max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl font-bold text-center mb-4">🛠️ Admin Panel</h2>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <form onSubmit={addProduct} className="space-y-3 mb-4">
           <input
             type="text"
             placeholder="Product Name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            required
-            className="border p-2 rounded"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border p-2 rounded"
           />
           <input
             type="number"
-            placeholder="Price"
-            value={form.price}
-            onChange={(e) => setForm({ ...form, price: e.target.value })}
-            required
-            className="border p-2 rounded"
+            placeholder="Price (USD)"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full border p-2 rounded"
           />
           <input
             type="text"
-            placeholder="Category"
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            className="border p-2 rounded"
+            placeholder="Image URL"
+            value={img}
+            onChange={(e) => setImg(e.target.value)}
+            className="w-full border p-2 rounded"
           />
-          <input type="file" onChange={handleImage} className="border p-2 rounded" />
-          {form.img && <img src={form.img} alt="preview" className="w-20 h-20 object-cover" />}
-          <button className="bg-green-600 text-white py-2 rounded col-span-full">
-            {editId ? "Update Product" : "Add Product"}
+
+          <button
+            type="submit"
+            className="w-full bg-orange-500 text-white py-2 rounded font-semibold"
+          >
+            Add Product
           </button>
         </form>
 
-        <h3 className="text-lg font-bold mb-2">Existing Products</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <h3 className="font-bold mb-2">🧾 Current Products</h3>
+        <ul className="space-y-2">
           {products.map((p) => (
-            <div key={p.id} className="border rounded p-2 text-center">
-              <img src={p.img} alt={p.name} className="w-full h-32 object-cover rounded" />
-              <h4 className="font-semibold mt-1">{p.name}</h4>
-              <p>${p.price}</p>
-              <div className="flex justify-center gap-2 mt-2">
-                <button
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
-                  onClick={() => handleEdit(p)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                  onClick={() => deleteProduct(p.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
+            <li
+              key={p.id}
+              className="flex justify-between items-center border-b pb-1"
+            >
+              <span>{p.name} (${p.price})</span>
+              <button
+                className="text-red-500 font-bold"
+                onClick={() => deleteProduct(p.id)}
+              >
+                ✕
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <button onClick={onClose} className="mt-4 w-full text-gray-600 underline">
-          Close Panel
+        <button
+          onClick={onClose}
+          className="mt-4 w-full text-gray-500 underline text-sm"
+        >
+          Close
         </button>
       </div>
     </div>
