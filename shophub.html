@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ShopHub — Your Online Store</title>
+<style>
+body {margin:0;font-family:"Poppins",Arial,sans-serif;background-color:#f7f7f7;}
+header {background-color:#ff9900;color:white;padding:15px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+header h1 {margin:0;}
+.search-bar {display:flex;align-items:center;margin-top:10px;}
+.search-bar input {padding:8px;border:none;border-radius:4px 0 0 4px;width:250px;}
+.search-bar button {background-color:#333;color:white;border:none;padding:8px 12px;border-radius:0 4px 4px 0;cursor:pointer;}
+nav {background-color:#fff;display:flex;justify-content:center;flex-wrap:wrap;padding:10px 0;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+nav a {text-decoration:none;color:#333;margin:8px 15px;font-weight:bold;transition:color 0.3s;}
+nav a:hover {color:#ff9900;}
+.category-title {font-size:1.4em;font-weight:bold;color:#333;margin:30px 20px 10px;border-left:5px solid #ff9900;padding-left:10px;}
+.product-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;padding:20px;}
+.product {background:white;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);text-align:center;padding:15px;transition:transform 0.2s ease;}
+.product:hover {transform:translateY(-5px);}
+.product img {max-width:100%;border-radius:8px;height:160px;object-fit:cover;}
+.product h3 {margin:10px 0 5px;font-size:16px;}
+.product p {color:#ff9900;font-weight:bold;}
+.buy-btn {background-color:#ff9900;color:white;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;font-weight:bold;margin-top:8px;transition:background-color 0.2s ease;}
+.buy-btn:hover {background-color:#e68a00;}
+footer {background-color:#333;color:white;text-align:center;padding:15px 0;margin-top:30px;}
+.modal {display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;}
+.modal-content {background:#fff;padding:20px;border-radius:10px;width:90%;max-width:400px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,0.3);animation:pop 0.3s ease;}
+@keyframes pop {from {transform:scale(0.8);opacity:0;} to {transform:scale(1);opacity:1;}}
+.modal h2 {margin-bottom:10px;}
+.modal p {margin:8px 0;}
+.quantity-control {display:flex;justify-content:center;align-items:center;margin:10px 0;}
+.quantity-control button {background:#ff9900;color:#fff;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;}
+.quantity-control span {margin:0 15px;font-size:18px;font-weight:bold;}
+.proceed-btn {background:#ff9900;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-size:16px;font-weight:bold;margin-top:10px;width:100%;}
+.close-btn {background:#ccc;color:#333;border:none;padding:8px 15px;border-radius:6px;cursor:pointer;margin-top:8px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ShopHub</h1>
+  <div class="search-bar">
+    <input type="text" placeholder="Search for products..." />
+    <button>Search</button>
+  </div>
+</header>
+
+<nav>
+  <a href="#phones">Phones</a>
+  <a href="#electronics">Electronics</a>
+  <a href="#fashion">Fashion</a>
+  <a href="#groceries">Groceries</a>
+  <a href="#home">Home</a>
+  <a href="#beauty">Beauty</a>
+  <a href="#sports">Sports</a>
+  <a href="#toys">Toys</a>
+  <a href="#books">Books</a>
+  <a href="#automotive">Automotive</a>
+</nav>
+
+<!-- PRODUCTS SECTIONS -->
+<div id="phones" class="category-title">📱 Phones</div>
+<section class="product-grid">
+  <!-- 50+ phone products -->
+  <div class="product"><img src="https://m.media-amazon.com/images/I/71b7zm0ZxkL._AC_SX679_.jpg" alt="iPhone 13 Pro"/><h3>iPhone 13 Pro</h3><p>$999</p><button class="buy-btn" onclick="openModal('iPhone 13 Pro',999)">Buy Now</button></div>
+  <div class="product"><img src="https://m.media-amazon.com/images/I/61BGE6iu4AL._AC_SX679_.jpg" alt="Samsung Galaxy S22"/><h3>Samsung Galaxy S22</h3><p>$899</p><button class="buy-btn" onclick="openModal('Samsung Galaxy S22',899)">Buy Now</button></div>
+  <!-- Repeat more phones up to 50 items -->
+</section>
+
+<div id="electronics" class="category-title">💻 Electronics</div>
+<section class="product-grid">
+  <!-- 50+ electronics products -->
+  <div class="product"><img src="https://m.media-amazon.com/images/I/71KR2i6-WaL._AC_SX679_.jpg" alt="Dell Laptop"/><h3>Dell Inspiron 15</h3><p>$649</p><button class="buy-btn" onclick="openModal('Dell Inspiron 15',649)">Buy Now</button></div>
+  <div class="product"><img src="https://m.media-amazon.com/images/I/81Y9XzAxdJL._AC_SX679_.jpg" alt="Sony Headphones"/><h3>Sony WH-1000XM4</h3><p>$299</p><button class="buy-btn" onclick="openModal('Sony WH-1000XM4',299)">Buy Now</button></div>
+  <!-- Repeat more electronics up to 50 items -->
+</section>
+
+<div id="fashion" class="category-title">👗 Fashion</div>
+<section class="product-grid">
+  <!-- 50+ fashion products -->
+  <div class="product"><img src="https://m.media-amazon.com/images/I/71s9nbvBzDL._AC_UY879_.jpg" alt="Men Sneakers"/><h3>Men Sneakers</h3><p>$59</p><button class="buy-btn" onclick="openModal('Men Sneakers',59)">Buy Now</button></div>
+  <div class="product"><img src="https://m.media-amazon.com/images/I/61-yCVzAq2L._AC_UY879_.jpg" alt="Women Dress"/><h3>Women Summer Dress</h3><p>$39</p><button class="buy-btn" onclick="openModal('Women Summer Dress',39)">Buy Now</button></div>
+  <!-- Repeat more fashion up to 50 items -->
+</section>
+
+<div id="groceries" class="category-title">🛒 Groceries</div>
+<section class="product-grid">
+  <!-- 50+ groceries products -->
+  <div class="product"><img src="https://m.media-amazon.com/images/I/81TjRLHaz5L._AC_SX679_.jpg" alt="Rice Bag"/><h3>Royal Basmati Rice (10kg)</h3><p>$25</p><button class="buy-btn" onclick="openModal('Royal Basmati Rice (10kg)',25)">Buy Now</button></div>
+  <div class="product"><img src="https://m.media-amazon.com/images/I/71Qwxz-2bZL._AC_SX679_.jpg" alt="Vegetable Oil"/><h3>Pure Vegetable Oil (5L)</h3><p>$18</p><button class="buy-btn" onclick="openModal('Pure Vegetable Oil (5L)',18)">Buy Now</button></div>
+  <!-- Repeat more groceries up to 50 items -->
+</section>
+
+<!-- Add remaining categories (Home, Beauty, Sports, Toys, Books, Automotive) similarly with 50 items each -->
+
+<footer>
+  <p>© 2025 ShopHub. All rights reserved.</p>
+</footer>
+
+<!-- BUY MODAL -->
+<div class="modal" id="buyModal">
+  <div class="modal-content">
+    <h2 id="modalName">Product Name</h2>
+    <p>Price: $<span id="modalPrice">0</span></p>
+    <div class="quantity-control">
+      <button onclick="changeQty(-1)">−</button>
+      <span id="modalQty">1</span>
+      <button onclick="changeQty(1)">+</button>
+    </div>
+    <p><strong>Total: $<span id="modalTotal">0</span></strong></p>
+    <button class="proceed-btn" onclick="proceedToPayment()">Proceed to Payment</button>
+    <button class="close-btn" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+let currentProduct = "";
+let currentPrice = 0;
+let currentQty = 1;
+
+function openModal(name, price) {
+  currentProduct = name;
+  currentPrice = price;
+  currentQty = 1;
+  document.getElementById("modalName").innerText = name;
+  document.getElementById("modalPrice").innerText = price;
+  document.getElementById("modalQty").innerText = currentQty;
+  document.getElementById("modalTotal").innerText = price;
+  document.getElementById("buyModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("buyModal").style.display = "none";
+}
+
+function changeQty(amount) {
+  currentQty += amount;
+  if (currentQty < 1) currentQty = 1;
+  document.getElementById("modalQty").innerText = currentQty;
+  document.getElementById("modalTotal").innerText = (currentPrice * currentQty).toFixed(2);
+}
+
+function proceedToPayment() {
+  const total = currentPrice * currentQty;
+  const url =
+    "https://www.cuttifree.com.ng?user=918&ref=15838" +
+    "&product=" + encodeURIComponent(currentProduct) +
+    "&price=" + currentPrice +
+    "&quantity=" + currentQty +
+    "&total=" + total.toFixed(2);
+  window.open(url, "_blank");
+  closeModal();
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  if (event.target === document.getElementById("buyModal")) {
+    closeModal();
+  }
+};
+</script>
+
+</body>
+</html>
