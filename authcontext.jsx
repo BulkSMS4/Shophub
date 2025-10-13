@@ -5,50 +5,46 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  // Load from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("user");
-    if (saved) setUser(JSON.parse(saved));
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
+
+  // Save user
+  const login = (email, password) => {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const found = users.find(
+      (u) => u.email === email && u.password === password
+    );
+    if (found) {
+      setUser(found);
+      localStorage.setItem("user", JSON.stringify(found));
+      return true;
+    }
+    return false;
+  };
 
   const register = (name, email, password) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
-
     if (users.find((u) => u.email === email)) {
-      alert("User already exists!");
-      return false;
+      return false; // email already exists
     }
-
     const newUser = { name, email, password };
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("user", JSON.stringify(newUser));
     setUser(newUser);
-    return true;
-  };
-
-  const login = (email, password) => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const existing = users.find(
-      (u) => u.email === email && u.password === password
-    );
-
-    if (!existing) {
-      alert("Invalid credentials!");
-      return false;
-    }
-
-    localStorage.setItem("user", JSON.stringify(existing));
-    setUser(existing);
+    localStorage.setItem("user", JSON.stringify(newUser));
     return true;
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
     setUser(null);
+    localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
