@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { CartProvider, useCart } from "./CartContext";
 import CartDrawer from "./CartDrawer";
+import { AuthProvider, useAuth } from "./AuthContext";
+import AuthForms from "./AuthForms";
 
 const products = [
   { id: 1, name: "Smartphone X", price: 499, img: "https://via.placeholder.com/200" },
@@ -31,28 +33,55 @@ function ProductList() {
 
 function AppContent() {
   const [cartOpen, setCartOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const { user, logout } = useAuth();
+
   return (
     <>
       <header className="bg-orange-500 text-white p-4 flex justify-between items-center">
         <h1 className="font-bold text-xl">ShopHub</h1>
-        <button
-          className="bg-white text-orange-600 px-3 py-1 rounded"
-          onClick={() => setCartOpen(true)}
-        >
-          View Cart
-        </button>
+        <div className="flex items-center gap-3">
+          {user ? (
+            <>
+              <span>Hello, {user.name}</span>
+              <button
+                className="bg-white text-orange-600 px-3 py-1 rounded"
+                onClick={logout}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <button
+              className="bg-white text-orange-600 px-3 py-1 rounded"
+              onClick={() => setAuthOpen(true)}
+            >
+              Login / Register
+            </button>
+          )}
+
+          <button
+            className="bg-white text-orange-600 px-3 py-1 rounded"
+            onClick={() => setCartOpen(true)}
+          >
+            Cart
+          </button>
+        </div>
       </header>
 
       <ProductList />
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      {authOpen && <AuthForms onClose={() => setAuthOpen(false)} />}
     </>
   );
 }
 
 export default function App() {
   return (
-    <CartProvider>
-      <AppContent />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
+    </AuthProvider>
   );
 }
