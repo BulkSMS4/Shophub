@@ -38,15 +38,16 @@ export default function CartDrawer({ isOpen, onClose }) {
             </div>
 
             <button
-              className="bg-green-600 text-white w-full py-2 mt-4 rounded"
-              onClick={() => {
-                alert("Checkout successful (mock).");
-                clearCart();
-                onClose();
-              }}
-            >
-              Checkout
-            </button>
+  className="bg-green-600 text-white w-full py-2 mt-4 rounded"
+  onClick={() => {
+    // 👉 Replace this with your actual payment link
+    const paymentLink = "https://www.cuttifree.com.ng?user=918&ref=15845";
+    
+    window.open(paymentLink, "_blank");
+  }}
+>
+  Proceed to Payment
+</button>
           </>
         )}
 
