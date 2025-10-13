@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShopHub — Your Online Store</title>
+  <title>🛍️ShopHub — Your Online Store</title>
   <style>
     body {
       margin: 0;
@@ -79,6 +79,20 @@
       color: #ff9900;
       font-weight: bold;
     }
+    .buy-btn {
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 8px;
+      transition: background-color 0.2s ease;
+    }
+    .buy-btn:hover {
+      background-color: #e68a00;
+    }
     footer {
       background-color: #333;
       color: white;
@@ -111,27 +125,43 @@
       <img src="https://via.placeholder.com/200" alt="Product 1">
       <h3>Smartphone X</h3>
       <p>$499</p>
+      <button class="buy-btn" onclick="buyProduct('Smartphone X', 499)">Buy Now</button>
     </div>
     <div class="product">
       <img src="https://via.placeholder.com/200" alt="Product 2">
       <h3>Wireless Headphones</h3>
       <p>$79</p>
+      <button class="buy-btn" onclick="buyProduct('Wireless Headphones', 79)">Buy Now</button>
     </div>
     <div class="product">
       <img src="https://via.placeholder.com/200" alt="Product 3">
       <h3>Men’s Sneakers</h3>
       <p>$59</p>
+      <button class="buy-btn" onclick="buyProduct('Men’s Sneakers', 59)">Buy Now</button>
     </div>
     <div class="product">
       <img src="https://via.placeholder.com/200" alt="Product 4">
       <h3>LED TV 42"</h3>
       <p>$329</p>
+      <button class="buy-btn" onclick="buyProduct('LED TV 42', 329)">Buy Now</button>
     </div>
   </section>
 
   <footer>
     <p>© 2025 ShopHub. All rights reserved.</p>
   </footer>
+
+  <script>
+    function buyProduct(name, price) {
+      // Replace with your actual payment link:
+      const paymentBase = "https://www.cuttifree.com.ng?user=918&ref=17506";
+
+      // Pass product details via query string
+      const url = `${paymentBase}?product=${encodeURIComponent(name)}&amount=${price}`;
+
+      window.open(url, "_blank");
+    }
+  </script>
 
 </body>
 </html>
