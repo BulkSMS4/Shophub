@@ -34,6 +34,12 @@ footer {background-color:#333;color:white;text-align:center;padding:15px 0;margi
 .quantity-control span {margin:0 15px;font-size:18px;font-weight:bold;}
 .proceed-btn {background:#ff9900;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-size:16px;font-weight:bold;margin-top:10px;width:100%;}
 .close-btn {background:#ccc;color:#333;border:none;padding:8px 15px;border-radius:6px;cursor:pointer;margin-top:8px;}
+#deliveryForm {display:none;flex-direction:column;gap:10px;margin-top:10px;text-align:left;}
+#deliveryForm input, #deliveryForm textarea {width:100%;padding:8px;border:1px solid #ccc;border-radius:4px;}
+.payment-popup {display:none;position:fixed;z-index:2000;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;}
+.payment-frame {background:#fff;border-radius:8px;overflow:hidden;width:95%;max-width:450px;height:500px;box-shadow:0 0 15px rgba(0,0,0,0.4);}
+.payment-frame iframe {width:100%;height:100%;border:none;}
+.close-payment {background:#ff9900;color:#fff;border:none;padding:8px 12px;cursor:pointer;width:100%;font-weight:bold;}
 </style>
 </head>
 <body>
@@ -50,49 +56,19 @@ footer {background-color:#333;color:white;text-align:center;padding:15px 0;margi
   <a href="#phones">Phones</a>
   <a href="#electronics">Electronics</a>
   <a href="#fashion">Fashion</a>
-  <a href="#groceries">Groceries</a>
-  <a href="#home">Home</a>
-  <a href="#beauty">Beauty</a>
-  <a href="#sports">Sports</a>
-  <a href="#toys">Toys</a>
-  <a href="#books">Books</a>
-  <a href="#automotive">Automotive</a>
 </nav>
 
-<!-- PRODUCTS SECTIONS -->
+<!-- PHONES -->
 <div id="phones" class="category-title">📱 Phones</div>
-<section class="product-grid">
-  <!-- 50+ phone products -->
-  <div class="product"><img src="https://m.media-amazon.com/images/I/71b7zm0ZxkL._AC_SX679_.jpg" alt="iPhone 13 Pro"/><h3>iPhone 13 Pro</h3><p>$999</p><button class="buy-btn" onclick="openModal('iPhone 13 Pro',999)">Buy Now</button></div>
-  <div class="product"><img src="https://m.media-amazon.com/images/I/61BGE6iu4AL._AC_SX679_.jpg" alt="Samsung Galaxy S22"/><h3>Samsung Galaxy S22</h3><p>$899</p><button class="buy-btn" onclick="openModal('Samsung Galaxy S22',899)">Buy Now</button></div>
-  <!-- Repeat more phones up to 50 items -->
-</section>
+<section class="product-grid" id="phoneProducts"></section>
 
+<!-- ELECTRONICS -->
 <div id="electronics" class="category-title">💻 Electronics</div>
-<section class="product-grid">
-  <!-- 50+ electronics products -->
-  <div class="product"><img src="https://m.media-amazon.com/images/I/71KR2i6-WaL._AC_SX679_.jpg" alt="Dell Laptop"/><h3>Dell Inspiron 15</h3><p>$649</p><button class="buy-btn" onclick="openModal('Dell Inspiron 15',649)">Buy Now</button></div>
-  <div class="product"><img src="https://m.media-amazon.com/images/I/81Y9XzAxdJL._AC_SX679_.jpg" alt="Sony Headphones"/><h3>Sony WH-1000XM4</h3><p>$299</p><button class="buy-btn" onclick="openModal('Sony WH-1000XM4',299)">Buy Now</button></div>
-  <!-- Repeat more electronics up to 50 items -->
-</section>
+<section class="product-grid" id="electronicsProducts"></section>
 
+<!-- FASHION -->
 <div id="fashion" class="category-title">👗 Fashion</div>
-<section class="product-grid">
-  <!-- 50+ fashion products -->
-  <div class="product"><img src="https://m.media-amazon.com/images/I/71s9nbvBzDL._AC_UY879_.jpg" alt="Men Sneakers"/><h3>Men Sneakers</h3><p>$59</p><button class="buy-btn" onclick="openModal('Men Sneakers',59)">Buy Now</button></div>
-  <div class="product"><img src="https://m.media-amazon.com/images/I/61-yCVzAq2L._AC_UY879_.jpg" alt="Women Dress"/><h3>Women Summer Dress</h3><p>$39</p><button class="buy-btn" onclick="openModal('Women Summer Dress',39)">Buy Now</button></div>
-  <!-- Repeat more fashion up to 50 items -->
-</section>
-
-<div id="groceries" class="category-title">🛒 Groceries</div>
-<section class="product-grid">
-  <!-- 50+ groceries products -->
-  <div class="product"><img src="https://m.media-amazon.com/images/I/81TjRLHaz5L._AC_SX679_.jpg" alt="Rice Bag"/><h3>Royal Basmati Rice (10kg)</h3><p>$25</p><button class="buy-btn" onclick="openModal('Royal Basmati Rice (10kg)',25)">Buy Now</button></div>
-  <div class="product"><img src="https://m.media-amazon.com/images/I/71Qwxz-2bZL._AC_SX679_.jpg" alt="Vegetable Oil"/><h3>Pure Vegetable Oil (5L)</h3><p>$18</p><button class="buy-btn" onclick="openModal('Pure Vegetable Oil (5L)',18)">Buy Now</button></div>
-  <!-- Repeat more groceries up to 50 items -->
-</section>
-
-<!-- Add remaining categories (Home, Beauty, Sports, Toys, Books, Automotive) similarly with 50 items each -->
+<section class="product-grid" id="fashionProducts"></section>
 
 <footer>
   <p>© 2025 ShopHub. All rights reserved.</p>
@@ -109,8 +85,23 @@ footer {background-color:#333;color:white;text-align:center;padding:15px 0;margi
       <button onclick="changeQty(1)">+</button>
     </div>
     <p><strong>Total: $<span id="modalTotal">0</span></strong></p>
-    <button class="proceed-btn" onclick="proceedToPayment()">Proceed to Payment</button>
+    <div id="deliveryForm">
+      <input type="text" id="fullName" placeholder="Full Name" required>
+      <input type="text" id="phoneNumber" placeholder="Phone Number" required>
+      <input type="text" id="city" placeholder="City" required>
+      <textarea id="address" placeholder="Delivery Address"></textarea>
+    </div>
+    <button class="proceed-btn" onclick="showDeliveryForm()">Next: Delivery Info</button>
+    <button class="proceed-btn" style="display:none;" id="payBtn" onclick="proceedToPayment()">Proceed to Payment</button>
     <button class="close-btn" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- PAYMENT POPUP -->
+<div class="payment-popup" id="paymentPopup">
+  <div class="payment-frame">
+    <iframe id="paymentIframe" src=""></iframe>
+    <button class="close-payment" onclick="closePayment()">Close Payment</button>
   </div>
 </div>
 
@@ -118,6 +109,60 @@ footer {background-color:#333;color:white;text-align:center;padding:15px 0;margi
 let currentProduct = "";
 let currentPrice = 0;
 let currentQty = 1;
+
+const categories = {
+  phoneProducts: [
+    {name:'iPhone 13 Pro',price:999,img:'https://m.media-amazon.com/images/I/71b7zm0ZxkL._AC_SX679_.jpg'},
+    {name:'Samsung Galaxy S22',price:899,img:'https://m.media-amazon.com/images/I/61BGE6iu4AL._AC_SX679_.jpg'},
+    {name:'Google Pixel 7',price:799,img:'https://m.media-amazon.com/images/I/71Jp0AqU0KL._AC_SX679_.jpg'},
+    {name:'OnePlus 10 Pro',price:699,img:'https://m.media-amazon.com/images/I/71Uh1oT5ZEL._AC_SX679_.jpg'},
+    {name:'iPhone SE',price:499,img:'https://m.media-amazon.com/images/I/71YlH-4MUQL._AC_SX679_.jpg'},
+    {name:'Xiaomi 12 Pro',price:650,img:'https://m.media-amazon.com/images/I/71mU-aDVGhL._AC_SX679_.jpg'},
+    {name:'Huawei P50',price:720,img:'https://m.media-amazon.com/images/I/71A1fUu0jjL._AC_SX679_.jpg'},
+    {name:'Nokia G50',price:299,img:'https://m.media-amazon.com/images/I/61Ph5nk4JtL._AC_SX679_.jpg'},
+    {name:'Infinix Zero 5G',price:279,img:'https://m.media-amazon.com/images/I/61j2tMyluKL._AC_SX679_.jpg'},
+    {name:'Tecno Camon 19',price:249,img:'https://m.media-amazon.com/images/I/61nZ5G0U62L._AC_SX679_.jpg'}
+  ],
+  electronicsProducts: [
+    {name:'Dell Inspiron 15',price:649,img:'https://m.media-amazon.com/images/I/71KR2i6-WaL._AC_SX679_.jpg'},
+    {name:'Sony Headphones',price:299,img:'https://m.media-amazon.com/images/I/81Y9XzAxdJL._AC_SX679_.jpg'},
+    {name:'MacBook Air M2',price:1099,img:'https://m.media-amazon.com/images/I/71TPda7cwUL._AC_SX679_.jpg'},
+    {name:'Logitech Mouse',price:49,img:'https://m.media-amazon.com/images/I/61p2AvzY9hL._AC_SX679_.jpg'},
+    {name:'Smart TV 50"',price:499,img:'https://m.media-amazon.com/images/I/81qx7a2zF2L._AC_SX679_.jpg'},
+    {name:'Bluetooth Speaker',price:89,img:'https://m.media-amazon.com/images/I/71QzwpI+3qL._AC_SX679_.jpg'},
+    {name:'PS5 Console',price:499,img:'https://m.media-amazon.com/images/I/51mWHXYT5gL._AC_SX679_.jpg'},
+    {name:'Xbox Series X',price:499,img:'https://m.media-amazon.com/images/I/71NBQ2a52CL._AC_SX679_.jpg'},
+    {name:'HP Printer',price:199,img:'https://m.media-amazon.com/images/I/61XdzVtOScL._AC_SX679_.jpg'},
+    {name:'Canon Camera',price:799,img:'https://m.media-amazon.com/images/I/81b0fIF8P-L._AC_SX679_.jpg'}
+  ],
+  fashionProducts: [
+    {name:'Men Sneakers',price:59,img:'https://m.media-amazon.com/images/I/71s9nbvBzDL._AC_UY879_.jpg'},
+    {name:'Women Dress',price:39,img:'https://m.media-amazon.com/images/I/61-yCVzAq2L._AC_UY879_.jpg'},
+    {name:'Leather Jacket',price:129,img:'https://m.media-amazon.com/images/I/71K5nKUzNHL._AC_UY879_.jpg'},
+    {name:'Wrist Watch',price:89,img:'https://m.media-amazon.com/images/I/61dGLZsOP1L._AC_UY879_.jpg'},
+    {name:'Backpack',price:45,img:'https://m.media-amazon.com/images/I/71Ed5o+Zp9L._AC_UY879_.jpg'},
+    {name:'Sunglasses',price:25,img:'https://m.media-amazon.com/images/I/61ejg7y2kUL._AC_UY879_.jpg'},
+    {name:'Ladies Handbag',price:70,img:'https://m.media-amazon.com/images/I/61H3Ek1N5UL._AC_UY879_.jpg'},
+    {name:'Mens T-shirt',price:20,img:'https://m.media-amazon.com/images/I/71lA2mT3f5L._AC_UY879_.jpg'},
+    {name:'Ladies Sandals',price:35,img:'https://m.media-amazon.com/images/I/61Of44R4yDL._AC_UY879_.jpg'},
+    {name:'Hoodie Sweatshirt',price:50,img:'https://m.media-amazon.com/images/I/61s3nmq+TPL._AC_UY879_.jpg'}
+  ]
+};
+
+for (const [id, items] of Object.entries(categories)) {
+  const container = document.getElementById(id);
+  items.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <img src="${p.img}" alt="${p.name}" />
+      <h3>${p.name}</h3>
+      <p>$${p.price}</p>
+      <button class="buy-btn" onclick="openModal('${p.name}',${p.price})">Buy Now</button>
+    `;
+    container.appendChild(div);
+  });
+}
 
 function openModal(name, price) {
   currentProduct = name;
@@ -128,6 +173,8 @@ function openModal(name, price) {
   document.getElementById("modalQty").innerText = currentQty;
   document.getElementById("modalTotal").innerText = price;
   document.getElementById("buyModal").style.display = "flex";
+  document.getElementById("deliveryForm").style.display = "none";
+  document.getElementById("payBtn").style.display = "none";
 }
 
 function closeModal() {
@@ -141,25 +188,47 @@ function changeQty(amount) {
   document.getElementById("modalTotal").innerText = (currentPrice * currentQty).toFixed(2);
 }
 
+function showDeliveryForm(){
+  document.getElementById("deliveryForm").style.display = "flex";
+  document.getElementById("payBtn").style.display = "block";
+}
+
 function proceedToPayment() {
+  const name = document.getElementById("fullName").value;
+  const phone = document.getElementById("phoneNumber").value;
+  const city = document.getElementById("city").value;
+  const address = document.getElementById("address").value;
+
+  if(!name || !phone || !city){
+    alert("Please fill all required fields.");
+    return;
+  }
+
   const total = currentPrice * currentQty;
   const url =
     "https://www.cuttifree.com.ng?user=918&ref=15838" +
     "&product=" + encodeURIComponent(currentProduct) +
     "&price=" + currentPrice +
     "&quantity=" + currentQty +
-    "&total=" + total.toFixed(2);
-  window.open(url, "_blank");
+    "&total=" + total.toFixed(2) +
+    "&name=" + encodeURIComponent(name) +
+    "&phone=" + encodeURIComponent(phone) +
+    "&city=" + encodeURIComponent(city) +
+    "&address=" + encodeURIComponent(address);
+
+  document.getElementById("paymentIframe").src = url;
+  document.getElementById("paymentPopup").style.display = "flex";
   closeModal();
 }
 
-// Close modal when clicking outside
+function closePayment(){
+  document.getElementById("paymentPopup").style.display = "none";
+}
+
 window.onclick = function(event) {
-  if (event.target === document.getElementById("buyModal")) {
-    closeModal();
-  }
+  if (event.target === document.getElementById("buyModal")) closeModal();
+  if (event.target === document.getElementById("paymentPopup")) closePayment();
 };
 </script>
-
 </body>
 </html>
